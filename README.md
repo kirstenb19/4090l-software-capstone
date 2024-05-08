@@ -1,3 +1,5 @@
+Tech news application using python 
+
 To run: pip install -r requirements.txt
         delete site.db & pychache
         python3 app.py
