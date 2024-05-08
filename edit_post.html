@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #0077cc;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header nav ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        header nav ul li {
+            display: inline;
+            margin: 0 20px;
+        }
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        header nav ul li a:hover {
+            color: #ddd;
+        }
+        main {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        main section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        label, input, textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        input, textarea {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #005fa3;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: white;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="profile">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h1>Edit Post</h1>
+            <form action="{{ url_for('edit_post', post_id=post.id) }}" method="POST">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" value="{{ post.title }}" required>
+                <label for="url">URL:</label>
+                <input type="url" id="url" name="url" value="{{ post.url }}" required>
+                <label for="content">Content:</label>
+                <textarea id="content" name="content" rows="4" required>{{ post.content }}</textarea>
+                <input type="submit" value="Update Post">
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; Footer</p>
+    </footer>
+</body>
+</html>

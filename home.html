@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #0077cc;
+            color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ddd;
+        }
+        main {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        .post-container {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .post-container:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: scale(1.02);
+        }
+        .post-title {
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: #0077cc;
+        }
+        .post-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .post-content {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+            font: inherit;
+        }
+        .post-actions {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .action-button img {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        .comments {
+            margin-top: 20px;
+        }
+        .comment {
+            margin-top: 10px;
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: white;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tech Blog!</h1>
+        <nav>
+            <ul>
+                {% if not session.get('user') %}
+                    <li><a href="/">Home</a></li>
+                    <li><a href="login">Login</a></li>
+                    <li><a href="register">Register</a></li>
+                {% else %}
+                    <li><a href="profile">Profile</a></li>
+                    <li><a href="create_post">Create Post</a></li>
+                    <li><a href="logout">Logout</a></li>
+                {% endif %}
+            </ul>
+            <form action="{{ url_for('search_results') }}" method="GET" style="display: inline-block; margin-left: 20px;">
+                <input type="text" name="query" placeholder="Search posts..." required>
+                <button type="submit">Search</button>
+            </form>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Posts</h2>
+            {% for post in posts %}
+            <div class="post-container">
+                <h3 class="post-title">{{ post.title }}</h3>
+                <a href="{{ post.url }}" class="post-content" target="_blank">{{ post.url }}</a>
+                <pre class="post-content">{{ post.content }}</pre>
+                <div class="post-meta">
+                    <small>Posted on {{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <div class="post-actions">
+		    {% if user_id %}
+                        <!-- Like button -->
+                        <form action="{{ url_for('like_post', post_id=post.id) }}" method="post" class="action-button">
+                            <button type="submit" style="background: none; border: none; padding: 5;">                            
+                                <img src="{{ url_for('static', filename='icons/like_icon.png') }}" alt="Like">
+                                <span>{{ post.likes }}</span>
+                            </button>
+                        </form>
+                        <!-- Dislike button -->
+                        <form action="{{ url_for('dislike_post', post_id=post.id) }}" method="post" class="action-button">
+                            <button type="submit" style="background: none; border: none; padding: 5;">                            
+                                <img src="{{ url_for('static', filename='icons/dislike_icon.png') }}" alt="Dislike">
+                                <span>{{ post.dislikes }}</span>
+                            </button>
+                        </form>
+                        <!-- Edit button -->
+                        <a href="{{ url_for('show_edit_post_form', post_id=post.id) }}" class="action-button">
+                            <button type="submit" style="background: none; border: none; padding: 5;">                            
+                                <img src="{{ url_for('static', filename='icons/edit_icon.png') }}" alt="Edit">
+                            </button>
+                        </a>
+                        <!-- Delete button -->
+                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post" class="action-button">
+                            <button type="submit" style="background: none; border: none; padding: 5;">                            
+                                <img src="{{ url_for('static', filename='icons/delete_icon.png') }}" alt="Delete">
+                            </button>
+                        </form>
+		    {% endif %}
+                </div>
+                <!-- Comments -->
+                <div class="comments">
+                    <h4>Comments:</h4>
+                    {% for comment in post.comments %}
+                    <div class="comment">
+                        <p>{{ comment.content }}</p>
+                        <small>by {{ comment.user.username }} on {{ comment.date_posted.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                    {% endfor %}
+                    {% if 'user' in session %}
+                    <form action="{{ url_for('post_comment', post_id=post.id) }}" method="POST">
+                        <textarea name="comment" rows="2" required></textarea>
+                        <button type="submit">Add Comment</button>
+                    </form>
+                    {% else %}
+                    <p><a href="{{ url_for('login') }}">Log in</a> to add a comment.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+    <footer>
+        <p>&copy; Footer</p>
+    </footer>
+</body>
+</html>

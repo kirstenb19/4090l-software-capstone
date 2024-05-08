@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/path_to_your_stylesheet.css">
+    <script>
+        function toggleEdit() {
+        var aboutMeText = document.getElementById('aboutMeText');
+        var aboutMeEdit = document.getElementById('aboutMeEdit');
+        if (aboutMeEdit.style.display === 'none') {
+            aboutMeEdit.style.display = 'block';
+            aboutMeText.style.display = 'none';
+        } else {
+            aboutMeEdit.style.display = 'none';
+            aboutMeText.style.display = 'block';
+            aboutMeText.textContent = document.querySelector('[name="about_me"]').value;  // Update the text display
+        }
+    }
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #0077cc;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header nav ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        header nav ul li {
+            display: inline;
+            margin: 0 20px;
+        }
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        header nav ul li a:hover {
+            color: #ddd;
+        }
+        main {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        main section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: white;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="profile">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h1>Hello, {{username}}</h1>
+            <h3>About Me</h3>
+            <p id="aboutMeText">{{aboutMe}} <button onclick="toggleEdit()">Edit</button></p>
+            <form id="aboutMeEdit" action="{{ url_for('update_about_me') }}" method="POST" style="display:none;">
+                <textarea name="about_me" rows="4" cols="50">{{aboutMe}}</textarea>
+                <button type="submit">Update</button>
+            </form>
+            <h3>Contact Information</h3>
+            <p>Email: {{email}}</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; Footer</p>
+    </footer>
+</body>
+</html>

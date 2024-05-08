@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #0077cc;
+            color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ddd;
+        }
+        main {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        .post-container {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .post-container:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: scale(1.02);
+        }
+        .post-title {
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: #0077cc;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+            color: white;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Search Results for "{{ query }}"</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+        <form action="{{ url_for('search_results') }}" method="GET">
+            <input type="text" name="query" placeholder="Search posts..." required>
+            <button type="submit">Search</button>
+        </form>
+    </header>
+    <main>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post-container">
+                    <h3 class="post-title"><a href="{{ post.url }}" target="_blank">{{ post.title }}</a></h3>
+                    <div>{{ post.content | safe }}</div> <!-- Display the full post content -->
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts found.</p>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; Footer</p>
+    </footer>
+</body>
+</html>
